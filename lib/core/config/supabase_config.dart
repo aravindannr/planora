@@ -8,15 +8,12 @@
 /// 3. Add this file to .gitignore
 /// 4. Create a .env file for real projects
 class SupabaseConfig {
-  // 🚀 Get these from: https://supabase.com/dashboard/project/_/settings/api
+  ///Supabase project URL
 
-  /// Your Supabase project URL
-  /// Format: https://xxxxxxxxxxxxx.supabase.co
   static const String supabaseUrl = 'https://mnwnustvtvfgxtxdmteo.supabase.co';
 
-  /// Your Supabase anonymous/public key
-  /// This is safe to expose in client-side code
-  /// Format: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+  ///  Supabase anonymous/public key
+
   static const String supabaseAnonKey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ud251c3R2dHZmZ3h0eGRtdGVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NDA5OTksImV4cCI6MjA4MzQxNjk5OX0.lbkR-_ASwSwfktfcybMh34cp4qCtFN-ezk6Hac_gT7A';
 

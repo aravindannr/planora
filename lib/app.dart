@@ -3,6 +3,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:planora/core/theme/app_theme.dart';
 import 'package:planora/core/theme/theme_notifier.dart';
+import 'package:planora/features/auth/presentation/screens/login_screen.dart';
+import 'package:planora/features/auth/presentation/screens/signup_screen.dart';
+import 'package:planora/features/auth/presentation/screens/splash_screen.dart';
+import 'package:planora/features/home/presentation/screens/home_screen.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -15,13 +19,12 @@ class MyApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: const TemporaryHomeScreen(), // Temporary screen for testing
+      home: const SplashScreen(), // Temporary screen for testing
 
       routes: {
-        '/splash': (context) => const TemporaryHomeScreen(),
-        // '/login': (context) => const LoginScreen(),
-        // '/signup': (context) => const SignupScreen(),
-        // '/home': (context) => const HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/home': (context) => const HomeScreen(),
         // '/profile': (context) => const ProfileScreen(),
       },
 
