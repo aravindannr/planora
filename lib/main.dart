@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:planora/app.dart';
 import 'package:planora/core/config/supabase_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,15 +32,6 @@ void main() async {
   runApp(
     const ProviderScope(child: MyApp()),
   ); // Run the app wrapped with Riverpod's ProviderScope
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp();
-  }
 }
 
 Future<void> configurSystemUi() async {
