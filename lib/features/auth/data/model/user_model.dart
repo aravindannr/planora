@@ -1,9 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// 👤 User Model
-///
-/// Represents a user in the FocusFlow app
-/// Maps Supabase User to our app's user model
 class UserModel {
   final String id;
   final String email;
@@ -21,7 +17,6 @@ class UserModel {
     this.lastSignInAt,
   });
 
-  /// Create UserModel from Supabase User
   factory UserModel.fromSupabaseUser(User user) {
     return UserModel(
       id: user.id,
@@ -35,7 +30,6 @@ class UserModel {
     );
   }
 
-  /// Convert to JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -47,7 +41,6 @@ class UserModel {
     };
   }
 
-  /// Create from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
@@ -61,7 +54,6 @@ class UserModel {
     );
   }
 
-  /// Get display name or email
   String get name => displayName ?? email.split('@').first;
 
   /// Get initials for avatar
@@ -76,7 +68,6 @@ class UserModel {
     return email[0].toUpperCase();
   }
 
-  /// Copy with method for updates
   UserModel copyWith({
     String? id,
     String? email,
