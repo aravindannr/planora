@@ -83,7 +83,7 @@ class AuthRepository {
       debugPrint('Attempting Google sign in');
       final response = await _supabase.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: 'com.planora.app://login-callback',
+        redirectTo: 'https://mnwnustvtvfgxtxdmteo.supabase.co/auth/v1/callback',
       );
       if (!response) {
         throw Exception('Google sign in was cancelled');

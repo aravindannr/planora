@@ -17,7 +17,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final passwordController = TextEditingController();
 
   Future<void> handleLogin() async {
-    if (formKey.currentState!.validate()) {
+    if (!formKey.currentState!.validate()) {
       return;
     }
     FocusScope.of(context).unfocus();
@@ -119,7 +119,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final isLoading = authState.isLoading;
+    final isEmailLoading = authState.loadingType == AuthLoadingType.emailLogin;
+
+    final isGoogleLoading =
+        authState.loadingType == AuthLoadingType.googleLogin;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -161,7 +165,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(
                       context,
-                    ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                    ).textTheme.bodySmall?.color?.withValues(alpha: .7),
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -181,21 +185,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextLinkButton(
                     text: 'Forgot Password?',
-                    onPressed: isLoading ? null : navigateToForgotPassword,
+                    onPressed: isGoogleLoading || isEmailLoading
+                        ? null
+                        : navigateToForgotPassword,
                   ),
                 ),
                 const SizedBox(height: 32),
                 PrimaryAuthButton(
                   text: 'Login',
-                  onPressed: handleLogin,
-                  isLoading: isLoading,
+                  onPressed: isEmailLoading ? null : handleLogin,
+                  isLoading: isEmailLoading,
                 ),
+
                 const SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
                       child: Divider(
-                        color: Theme.of(context).dividerColor.withOpacity(0.3),
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: .3),
                       ),
                     ),
                     Padding(
@@ -205,13 +214,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.color?.withOpacity(0.5),
+                          ).textTheme.bodySmall?.color?.withValues(alpha: .5),
                         ),
                       ),
                     ),
                     Expanded(
                       child: Divider(
-                        color: Theme.of(context).dividerColor.withOpacity(0.3),
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: .3),
                       ),
                     ),
                   ],
@@ -219,15 +230,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 const SizedBox(height: 24),
                 GoogleSignInButton(
-                  onPressed: handleGoogleSignIn,
-                  isLoading: isLoading,
+                  onPressed: isGoogleLoading ? null : handleGoogleSignIn,
+                  isLoading: isGoogleLoading,
                 ),
+
                 const SizedBox(height: 16),
                 SecondaryAuthButton(
                   text: 'Continue as Guest',
-                  onPressed: isLoading ? null : handleGuestMode,
+                  onPressed: isGoogleLoading || isEmailLoading
+                      ? null
+                      : handleGuestMode,
                   icon: Icons.person_outline,
                 ),
+
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -238,7 +253,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       TextLinkButton(
                         text: 'Sign Up',
-                        onPressed: isLoading ? null : navigateToSignup,
+                        onPressed: isGoogleLoading || isEmailLoading
+                            ? null
+                            : navigateToSignup,
                         bold: true,
                       ),
                     ],

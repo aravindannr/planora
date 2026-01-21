@@ -12,36 +12,47 @@ class AuthState {
   final AuthStatus status;
   final UserModel? user;
   final String? errorMessage;
+  final AuthLoadingType loadingType;
 
-  const AuthState({required this.status, this.user, this.errorMessage});
+  const AuthState({
+    required this.status,
+    this.user,
+    this.errorMessage,
+    this.loadingType = AuthLoadingType.none,
+  });
 
-  /// Initial state
   factory AuthState.initial() {
-    return const AuthState(status: AuthStatus.initial);
+    return const AuthState(
+      status: AuthStatus.initial,
+      loadingType: AuthLoadingType.none,
+    );
   }
 
-  /// Loading state
-  AuthState copyWithLoading() {
-    return AuthState(status: AuthStatus.loading, user: user);
+  AuthState copyWithLoading(AuthLoadingType type) {
+    return AuthState(status: AuthStatus.loading, user: user, loadingType: type);
   }
 
-  /// Authenticated state
   AuthState copyWithUser(UserModel user) {
-    return AuthState(status: AuthStatus.authenticated, user: user);
+    return AuthState(
+      status: AuthStatus.authenticated,
+      user: user,
+      loadingType: AuthLoadingType.none,
+    );
   }
 
-  /// Unauthenticated state
   AuthState copyWithUnauthenticated([String? error]) {
-    return AuthState(status: AuthStatus.unauthenticated, errorMessage: error);
+    return AuthState(
+      status: AuthStatus.unauthenticated,
+      errorMessage: error,
+      loadingType: AuthLoadingType.none,
+    );
   }
 
-  /// Check if authenticated
   bool get isAuthenticated =>
       status == AuthStatus.authenticated && user != null;
-
-  /// Check if loading
-  bool get isLoading => status == AuthStatus.loading;
 }
+
+enum AuthLoadingType { none, emailLogin, googleLogin, signup, profileUpdate }
 
 //Auth State Notifier
 class AuthNotifier extends StateNotifier<AuthState> {
@@ -71,7 +82,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     required String password,
   }) async {
     try {
-      state = state.copyWithLoading();
+      state = state.copyWithLoading(AuthLoadingType.emailLogin);
 
       final user = await authRepository.signInwithEmail(
         email: email,
@@ -96,7 +107,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     String? displayName,
   }) async {
     try {
-      state = state.copyWithLoading();
+      state = state.copyWithLoading(AuthLoadingType.signup);
       final user = await authRepository.signUpWithEmail(
         email: email,
         password: password,
@@ -115,7 +126,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Sign in with Google
   Future<bool> signInwithGoogle() async {
     try {
-      state = state.copyWithLoading();
+      state = state.copyWithLoading(AuthLoadingType.googleLogin);
       final user = await authRepository.signInwithGoogle();
       state = state.copyWithUser(user);
       debugPrint('Google sign in successful in provider');
@@ -156,7 +167,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Update profile
   Future<bool> updateProfile({String? displayName, String? avatarUrl}) async {
     try {
-      state = state.copyWithLoading();
+      state = state.copyWithLoading(AuthLoadingType.profileUpdate);
       final user = await authRepository.updateProfile(
         displayName: displayName,
         avatarUrl: avatarUrl,
@@ -175,7 +186,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   // Clear error message
   void clearError() {
     if (state.errorMessage != null) {
-      state = AuthState(status: state.status, user: state.user);
+      state = AuthState(
+        status: state.status,
+        user: state.user,
+        loadingType: state.loadingType,
+      );
     }
   }
 }
