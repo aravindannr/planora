@@ -23,14 +23,14 @@ class AuthRepository {
   Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
   // Sign in with email and password
-  Future<UserModel?> signInwithEmail({
+  Future<UserModel> signInwithEmail({
     required String email,
     required String password,
   }) async {
     try {
       debugPrint('Attempting to sign in: $email');
       final response = await _supabase.auth.signInWithPassword(
-        email: email,
+        email: email.trim(),
         password: password,
       );
       if (response.user == null) {
@@ -47,8 +47,38 @@ class AuthRepository {
     }
   }
 
+  // Sign up with email and password
+  Future<UserModel> signUpWithEmail({
+    required String email,
+    required String password,
+    String? displayName,
+  }) async {
+    try {
+      debugPrint('Attempting to sign up: $email');
+
+      final response = await _supabase.auth.signUp(
+        email: email.trim(),
+        password: password,
+        data: displayName != null ? {'display_name': displayName} : null,
+      );
+
+      if (response.user == null) {
+        throw Exception('Signup failed: No user returned');
+      }
+
+      debugPrint('Sign up successful: ${response.user!.email}');
+      return UserModel.fromSupabaseUser(response.user!);
+    } on AuthException catch (e) {
+      debugPrint('Auth error: ${e.message}');
+      throw _handleAuthException(e);
+    } catch (e) {
+      debugPrint('Unexpected error during sign up: $e');
+      throw Exception('An unexpected error occurred. Please try again.');
+    }
+  }
+
   // Sign in with Google (OAuth)
-  Future<UserModel?> signInwithGoogle() async {
+  Future<UserModel> signInwithGoogle() async {
     try {
       debugPrint('Attempting Google sign in');
       final response = await _supabase.auth.signInWithOAuth(
@@ -90,7 +120,7 @@ class AuthRepository {
     try {
       debugPrint('Sending password reset email to: $email');
       await _supabase.auth.resetPasswordForEmail(
-        email,
+        email.trim(),
         redirectTo: "com.planora.app://login-callback",
       );
       debugPrint('Password reset email sent to: $email');
@@ -104,7 +134,7 @@ class AuthRepository {
   }
 
   // Update user profile
-  Future<UserModel?> updateProfile({
+  Future<UserModel> updateProfile({
     String? displayName,
     String? avatarUrl,
   }) async {
