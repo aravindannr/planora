@@ -36,16 +36,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> handleGoogleSignIn() async {
-    final response = await ref.read(authProvider.notifier).signInwithGoogle();
-    if (!mounted) return;
-    if (response) {
-      navigateToHome();
-    } else {
-      final error = ref.read(authProvider).errorMessage;
-      showErrorSnackBar(error ?? 'Google sign in failed. Please try again.');
-    }
-  }
+  // Future<void> handleGoogleSignIn() async {
+  //   final response = await ref.read(authProvider.notifier).signInwithGoogle();
+  //   if (!mounted) return;
+  //   if (response) {
+  //     navigateToHome();
+  //   } else {
+  //     final error = ref.read(authProvider).errorMessage;
+  //     showErrorSnackBar(error ?? 'Google sign in failed. Please try again.');
+  //   }
+  // }
 
   void handleGuestMode() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -121,8 +121,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
     final isEmailLoading = authState.loadingType == AuthLoadingType.emailLogin;
 
-    final isGoogleLoading =
-        authState.loadingType == AuthLoadingType.googleLogin;
+    // final isGoogleLoading =
+    //     authState.loadingType == AuthLoadingType.googleLogin;
 
     return Scaffold(
       body: SafeArea(
@@ -185,9 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextLinkButton(
                     text: 'Forgot Password?',
-                    onPressed: isGoogleLoading || isEmailLoading
-                        ? null
-                        : navigateToForgotPassword,
+                    onPressed: isEmailLoading ? null : navigateToForgotPassword,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -229,20 +227,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
 
                 const SizedBox(height: 24),
-                GoogleSignInButton(
-                  onPressed: isGoogleLoading ? null : handleGoogleSignIn,
-                  isLoading: isGoogleLoading,
-                ),
 
-                const SizedBox(height: 16),
-                SecondaryAuthButton(
-                  text: 'Continue as Guest',
-                  onPressed: isGoogleLoading || isEmailLoading
-                      ? null
-                      : handleGuestMode,
-                  icon: Icons.person_outline,
-                ),
+                // GoogleSignInButton(
+                //   onPressed: isGoogleLoading ? null : handleGoogleSignIn,
+                //   isLoading: isGoogleLoading,
+                // ),
 
+                // const SizedBox(height: 16),
+                // SecondaryAuthButton(
+                //   text: 'Continue as Guest',
+                //   onPressed:  isEmailLoading
+                //       ? null
+                //       : handleGuestMode,
+                //   icon: Icons.person_outline,
+                // ),
                 Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,9 +251,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       TextLinkButton(
                         text: 'Sign Up',
-                        onPressed: isGoogleLoading || isEmailLoading
-                            ? null
-                            : navigateToSignup,
+                        onPressed: isEmailLoading ? null : navigateToSignup,
                         bold: true,
                       ),
                     ],

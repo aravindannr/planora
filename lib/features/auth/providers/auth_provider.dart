@@ -123,21 +123,21 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  // Sign in with Google
-  Future<bool> signInwithGoogle() async {
-    try {
-      state = state.copyWithLoading(AuthLoadingType.googleLogin);
-      final user = await authRepository.signInwithGoogle();
-      state = state.copyWithUser(user);
-      debugPrint('Google sign in successful in provider');
-      return true;
-    } catch (e) {
-      final errorMessage = e.toString().replaceAll('Exception: ', '');
-      state = state.copyWithUnauthenticated(errorMessage);
-      debugPrint('Google sign in failed in provider: $errorMessage');
-      return false;
-    }
-  }
+  // // Sign in with Google
+  // Future<bool> signInwithGoogle() async {
+  //   try {
+  //     state = state.copyWithLoading(AuthLoadingType.googleLogin);
+  //     final user = await authRepository.signInwithGoogle();
+  //     state = state.copyWithUser(user);
+  //     debugPrint('Google sign in successful in provider');
+  //     return true;
+  //   } catch (e) {
+  //     final errorMessage = e.toString().replaceAll('Exception: ', '');
+  //     state = state.copyWithUnauthenticated(errorMessage);
+  //     debugPrint('Google sign in failed in provider: $errorMessage');
+  //     return false;
+  //   }
+  // }
 
   // Sign out
   Future<void> signOut() async {

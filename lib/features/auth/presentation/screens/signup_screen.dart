@@ -53,16 +53,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     }
   }
 
-  Future<void> handleGoogleSignIn() async {
-    final response = await ref.read(authProvider.notifier).signInwithGoogle();
-    if (!mounted) return;
-    if (response) {
-      navigateToHome();
-    } else {
-      final error = ref.read(authProvider).errorMessage;
-      showErrorSnackBar(error ?? 'Google sign in failed. Please try again.');
-    }
-  }
+  // Future<void> handleGoogleSignIn() async {
+  //   final response = await ref.read(authProvider.notifier).signInwithGoogle();
+  //   if (!mounted) return;
+  //   if (response) {
+  //     navigateToHome();
+  //   } else {
+  //     final error = ref.read(authProvider).errorMessage;
+  //     showErrorSnackBar(error ?? 'Google sign in failed. Please try again.');
+  //   }
+  // }
 
   /// Navigate to home screen
   void navigateToHome() {
@@ -124,8 +124,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
     final isSignupLoading = authState.loadingType == AuthLoadingType.signup;
 
-    final isGoogleLoading =
-        authState.loadingType == AuthLoadingType.googleLogin;
+    // final isGoogleLoading =
+    //     authState.loadingType == AuthLoadingType.googleLogin;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -137,9 +137,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
-                  onPressed: isSignupLoading || isGoogleLoading
-                      ? null
-                      : navigateToLogin,
+                  onPressed: isSignupLoading ? null : navigateToLogin,
                   padding: EdgeInsets.zero,
                   alignment: Alignment.centerLeft,
                 ),
@@ -175,7 +173,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(
                       context,
-                    ).textTheme.bodySmall?.color?.withOpacity(0.7),
+                    ).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                   ),
                 ),
 
@@ -207,7 +205,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       height: 24,
                       child: Checkbox(
                         value: acceptTerms,
-                        onChanged: isSignupLoading || isGoogleLoading
+                        onChanged: isSignupLoading
                             ? null
                             : (value) {
                                 setState(() {
@@ -267,7 +265,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   children: [
                     Expanded(
                       child: Divider(
-                        color: Theme.of(context).dividerColor.withOpacity(0.3),
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: 0.3),
                       ),
                     ),
                     Padding(
@@ -277,22 +277,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.color?.withOpacity(0.5),
+                          ).textTheme.bodySmall?.color?.withValues(alpha: 0.5),
                         ),
                       ),
                     ),
                     Expanded(
                       child: Divider(
-                        color: Theme.of(context).dividerColor.withOpacity(0.3),
+                        color: Theme.of(
+                          context,
+                        ).dividerColor.withValues(alpha: 0.3),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                GoogleSignInButton(
-                  onPressed: handleGoogleSignIn,
-                  isLoading: isGoogleLoading,
-                ),
+                // const SizedBox(height: 24),
+                // GoogleSignInButton(
+                //   onPressed: handleGoogleSignIn,
+                //   isLoading: isGoogleLoading,
+                // ),
                 const SizedBox(height: 32),
 
                 // Login Link
@@ -306,9 +308,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       ),
                       TextLinkButton(
                         text: 'Login',
-                        onPressed: isSignupLoading || isGoogleLoading
-                            ? null
-                            : navigateToLogin,
+                        onPressed: isSignupLoading ? null : navigateToLogin,
                         bold: true,
                       ),
                     ],

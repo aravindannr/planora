@@ -231,7 +231,9 @@ class _ThemeButton extends StatelessWidget {
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onPressed(),
-      selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      selectedColor: Theme.of(
+        context,
+      ).colorScheme.primary.withValues(alpha: .2),
     );
   }
 }

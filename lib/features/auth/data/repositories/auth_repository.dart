@@ -78,32 +78,32 @@ class AuthRepository {
   }
 
   // Sign in with Google (OAuth)
-  Future<UserModel> signInwithGoogle() async {
-    try {
-      debugPrint('Attempting Google sign in');
-      final response = await _supabase.auth.signInWithOAuth(
-        OAuthProvider.google,
-        redirectTo: 'https://mnwnustvtvfgxtxdmteo.supabase.co/auth/v1/callback',
-      );
-      if (!response) {
-        throw Exception('Google sign in was cancelled');
-      }
-      // Wait for auth state change
-      await Future.delayed(const Duration(seconds: 2));
-      final user = _supabase.auth.currentUser;
-      if (user == null) {
-        throw Exception('Google sign in failed: No user found');
-      }
-      debugPrint('Google sign in successful: ${user.email}');
-      return UserModel.fromSupabaseUser(user);
-    } on AuthException catch (e) {
-      debugPrint('Google auth error: ${e.message}');
-      throw _handleAuthException(e);
-    } catch (e) {
-      debugPrint('Unexpected error during Google sign in: $e');
-      throw Exception('Google sign in failed. Please try again.');
-    }
-  }
+  // Future<UserModel> signInwithGoogle() async {
+  //   try {
+  //     debugPrint('Attempting Google sign in');
+  //     final response = await _supabase.auth.signInWithOAuth(
+  //       OAuthProvider.google,
+  //       redirectTo: 'https://mnwnustvtvfgxtxdmteo.supabase.co/auth/v1/callback',
+  //     );
+  //     if (!response) {
+  //       throw Exception('Google sign in was cancelled');
+  //     }
+  //     // Wait for auth state change
+  //     await Future.delayed(const Duration(seconds: 2));
+  //     final user = _supabase.auth.currentUser;
+  //     if (user == null) {
+  //       throw Exception('Google sign in failed: No user found');
+  //     }
+  //     debugPrint('Google sign in successful: ${user.email}');
+  //     return UserModel.fromSupabaseUser(user);
+  //   } on AuthException catch (e) {
+  //     debugPrint('Google auth error: ${e.message}');
+  //     throw _handleAuthException(e);
+  //   } catch (e) {
+  //     debugPrint('Unexpected error during Google sign in: $e');
+  //     throw Exception('Google sign in failed. Please try again.');
+  //   }
+  // }
 
   Future<void> signOut() async {
     try {
