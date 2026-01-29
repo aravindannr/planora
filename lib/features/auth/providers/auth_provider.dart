@@ -59,9 +59,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository authRepository;
   AuthNotifier(this.authRepository) : super(AuthState.initial()) {
     _checkAuthStatus();
+    _listenToAuthChanges();
   }
+
   Future<void> _checkAuthStatus() async {
     try {
+      // Add a small delay to ensure Supabase is fully initialized
+      await Future.delayed(const Duration(milliseconds: 100));
+
       final user = authRepository.getCurretUser();
       if (user != null) {
         state = state.copyWithUser(user);
@@ -74,6 +79,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
       debugPrint('Error checking auth status: $e');
       state = state.copyWithUnauthenticated();
     }
+  }
+
+  void _listenToAuthChanges() {
+    authRepository.authStateChanges.listen((authState) {
+      final user = authState.session?.user;
+      if (user != null) {
+        final userModel = UserModel.fromSupabaseUser(user);
+        state = state.copyWithUser(userModel);
+        debugPrint('Auth state changed - User logged in: ${user.email}');
+      } else {
+        state = state.copyWithUnauthenticated();
+        debugPrint('Auth state changed - User logged out');
+      }
+    });
   }
 
   // Sign in with email and password
@@ -160,6 +179,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       final errorMessage = e.toString().replaceAll('Exception: ', '');
       debugPrint('Password reset failed in provider: $errorMessage');
+      return false;
+    }
+  }
+
+  // Resend confirmation email
+  Future<bool> resendConfirmation({required String email}) async {
+    try {
+      await authRepository.resendConfirmation(email);
+      debugPrint('Confirmation email resent in provider');
+      return true;
+    } catch (e) {
+      final errorMessage = e.toString().replaceAll('Exception: ', '');
+      debugPrint('Resend confirmation failed in provider: $errorMessage');
       return false;
     }
   }

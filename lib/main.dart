@@ -61,8 +61,10 @@ Future<void> initializeService() async {
     await Supabase.initialize(
       url: SupabaseConfig.supabaseUrl,
       anonKey: SupabaseConfig.supabaseAnonKey,
-      authOptions: FlutterAuthClientOptions(
+      authOptions: const FlutterAuthClientOptions(
         authFlowType: AuthFlowType.pkce, // More secure auth flow
+        // Enable automatic token refresh
+        autoRefreshToken: true,
       ),
       // Optional: Enable debug mode in development
       debug: true,

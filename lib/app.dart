@@ -6,6 +6,7 @@ import 'package:planora/features/auth/presentation/screens/login_screen.dart';
 import 'package:planora/features/auth/presentation/screens/signup_screen.dart';
 import 'package:planora/features/auth/presentation/screens/splash_screen.dart';
 import 'package:planora/features/home/presentation/screens/home_screen.dart';
+import 'package:planora/features/profile/presentation/screens/profile_screen.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -18,13 +19,13 @@ class MyApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
-      home: const SplashScreen(), // Temporary screen for testing
+      home: const SplashScreen(),
 
       routes: {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
-        // '/profile': (context) => const ProfileScreen(),
+        '/profile': (context) => const ProfileScreen(),
       },
 
       themeAnimationDuration: const Duration(milliseconds: 300),

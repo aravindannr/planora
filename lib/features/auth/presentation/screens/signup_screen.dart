@@ -46,11 +46,61 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         );
     if (!mounted) return;
     if (response) {
-      navigateToHome();
+      // Check if email confirmation is required
+      showEmailVerificationDialog();
     } else {
       final error = ref.read(authProvider).errorMessage;
       showErrorSnackBar(error ?? 'Signup failed. Please try again.');
     }
+  }
+
+  void showEmailVerificationDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Account Created!'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Your account has been created successfully.'),
+            const SizedBox(height: 16),
+            Text(
+              'Please check your email (${emailController.text.trim()}) and click the verification link to activate your account.',
+            ),
+            const SizedBox(height: 16),
+            const Text('After verification, you can sign in to your account.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final success = await ref
+                  .read(authProvider.notifier)
+                  .resendConfirmation(email: emailController.text.trim());
+              if (mounted) {
+                if (success) {
+                  showSuccessSnackBar('Verification email sent again!');
+                } else {
+                  showErrorSnackBar(
+                    'Failed to resend email. Please try again.',
+                  );
+                }
+              }
+            },
+            child: const Text('Resend Email'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              navigateToLogin();
+            },
+            child: const Text('Go to Login'),
+          ),
+        ],
+      ),
+    );
   }
 
   // Future<void> handleGoogleSignIn() async {
@@ -67,6 +117,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   /// Navigate to home screen
   void navigateToHome() {
     Navigator.of(context).pushReplacementNamed('/home');
+    showSuccessSnackBar('Account created successfully!');
+  }
+
+  /// Navigate to home screen
+  void navigateToProfile() {
+    Navigator.of(context).pushReplacementNamed('/profile');
     showSuccessSnackBar('Account created successfully!');
   }
 

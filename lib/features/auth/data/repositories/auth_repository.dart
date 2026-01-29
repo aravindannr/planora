@@ -7,11 +7,23 @@ class AuthRepository {
 
   /// Get current user
   UserModel? getCurretUser() {
-    final user = _supabase.auth.currentUser;
-    if (user != null) {
-      return UserModel.fromSupabaseUser(user);
+    try {
+      final user = _supabase.auth.currentUser;
+      final session = _supabase.auth.currentSession;
+
+      debugPrint(
+        'Getting current user - Session: ${session != null ? 'exists' : 'null'}',
+      );
+      debugPrint('Getting current user - User: ${user?.email ?? 'null'}');
+
+      if (user != null && session != null) {
+        return UserModel.fromSupabaseUser(user);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting current user: $e');
+      return null;
     }
-    return null;
   }
 
   /// Check if user is logged in
@@ -179,7 +191,7 @@ class AuthRepository {
         return 'Invalid email or password. Please try again.';
 
       case 'email not confirmed':
-        return 'Please verify your email address before logging in.';
+        return 'Please check your email and click the verification link before logging in.';
 
       case 'user already registered':
         return 'This email is already registered. Please sign in instead.';
@@ -198,6 +210,21 @@ class AuthRepository {
 
       default:
         return exception.message;
+    }
+  }
+
+  // Resend confirmation email
+  Future<void> resendConfirmation(String email) async {
+    try {
+      debugPrint('Resending confirmation email to: $email');
+      await _supabase.auth.resend(type: OtpType.signup, email: email.trim());
+      debugPrint('Confirmation email resent to: $email');
+    } on AuthException catch (e) {
+      debugPrint('Auth error during resend confirmation: ${e.message}');
+      throw _handleAuthException(e);
+    } catch (e) {
+      debugPrint('Unexpected error during resend confirmation: $e');
+      throw Exception('Failed to resend confirmation email. Please try again.');
     }
   }
 }

@@ -32,8 +32,60 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       navigateToHome();
     } else {
       final error = ref.read(authProvider).errorMessage;
-      showErrorSnackBar(error ?? 'Login failed. Please try again.');
+      final errorMessage = error ?? 'Login failed. Please try again.';
+
+      // Check if it's an email confirmation error
+      if (errorMessage.toLowerCase().contains('verification') ||
+          errorMessage.toLowerCase().contains('confirm')) {
+        showEmailConfirmationDialog(errorMessage);
+      } else {
+        showErrorSnackBar(errorMessage);
+      }
     }
+  }
+
+  void showEmailConfirmationDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Email Verification Required'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(message),
+            const SizedBox(height: 16),
+            const Text('Would you like us to resend the verification email?'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              final success = await ref
+                  .read(authProvider.notifier)
+                  .resendConfirmation(email: emailController.text.trim());
+              if (mounted) {
+                if (success) {
+                  showSuccessSnackBar(
+                    'Verification email sent! Please check your inbox.',
+                  );
+                } else {
+                  showErrorSnackBar(
+                    'Failed to send verification email. Please try again.',
+                  );
+                }
+              }
+            },
+            child: const Text('Resend Email'),
+          ),
+        ],
+      ),
+    );
   }
 
   // Future<void> handleGoogleSignIn() async {
@@ -58,6 +110,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void navigateToHome() {
     Navigator.of(context).pushReplacementNamed('/home');
+
+    showSuccessSnackBar('Welcome back!');
+  }
+
+  void navigateToProfile() {
+    Navigator.of(context).pushReplacementNamed('/profile');
 
     showSuccessSnackBar('Welcome back!');
   }

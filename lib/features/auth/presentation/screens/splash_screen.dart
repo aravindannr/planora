@@ -123,14 +123,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (_hasNavigated || !mounted) return;
 
     try {
+      // Wait a bit to ensure Supabase is fully initialized
+      await Future.delayed(const Duration(milliseconds: 100));
+
       // Get current user session
       final session = supabase.auth.currentSession;
       final user = supabase.auth.currentUser;
 
+      debugPrint('Session: ${session != null ? 'exists' : 'null'}');
+      debugPrint('User: ${user?.email ?? 'null'}');
+
       if (session != null && user != null) {
         // User is logged in → Navigate to Home
         debugPrint('User is logged in: ${user.email}');
-        _navigateToHome();
+        _navigateToProfile();
       } else {
         // User is not logged in → Navigate to Login
         debugPrint('User is not logged in');
@@ -157,6 +163,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted || _hasNavigated) return;
     _hasNavigated = true;
     Navigator.of(context).pushReplacementNamed('/home');
+  }
+
+  void _navigateToProfile() {
+    if (!mounted || _hasNavigated) return;
+    _hasNavigated = true;
+    Navigator.of(context).pushReplacementNamed('/profile');
   }
 
   @override
