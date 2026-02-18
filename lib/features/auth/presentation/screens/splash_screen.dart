@@ -134,9 +134,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       debugPrint('User: ${user?.email ?? 'null'}');
 
       if (session != null && user != null) {
-        // User is logged in → Navigate to Home
+        // User is logged in → Navigate to Home (profile is now a tab inside HomeScreen)
         debugPrint('User is logged in: ${user.email}');
-        _navigateToProfile();
+        _navigateToHome();
       } else {
         // User is not logged in → Navigate to Login
         debugPrint('User is not logged in');
@@ -163,12 +163,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!mounted || _hasNavigated) return;
     _hasNavigated = true;
     Navigator.of(context).pushReplacementNamed('/home');
-  }
-
-  void _navigateToProfile() {
-    if (!mounted || _hasNavigated) return;
-    _hasNavigated = true;
-    Navigator.of(context).pushReplacementNamed('/profile');
   }
 
   @override

@@ -120,12 +120,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     showSuccessSnackBar('Account created successfully!');
   }
 
-  /// Navigate to home screen
-  void navigateToProfile() {
-    Navigator.of(context).pushReplacementNamed('/profile');
-    showSuccessSnackBar('Account created successfully!');
-  }
-
   /// Navigate back to login screen
   void navigateToLogin() {
     Navigator.of(context).pop();

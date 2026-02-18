@@ -133,8 +133,6 @@ class ProfileRepository {
       await _supabase.from('profiles').update(profileData).eq('id', userId);
 
       debugPrint('Profile updated successfully');
-
-      debugPrint('Profile updated successfully');
     } catch (e) {
       debugPrint('Error updating profile: $e');
       throw Exception('Failed to update profile. Please try again.');

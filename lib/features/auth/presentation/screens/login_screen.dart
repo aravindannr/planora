@@ -114,12 +114,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     showSuccessSnackBar('Welcome back!');
   }
 
-  void navigateToProfile() {
-    Navigator.of(context).pushReplacementNamed('/profile');
-
-    showSuccessSnackBar('Welcome back!');
-  }
-
   void navigateToSignup() {
     Navigator.of(context).pushNamed('/signup');
   }

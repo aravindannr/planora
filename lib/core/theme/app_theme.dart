@@ -66,9 +66,14 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          // Explicit colours prevent M3 defaults from producing low-contrast text
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primaryColor.withValues(alpha: 0.38),
+          disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(20),
+            borderRadius: BorderRadius.circular(20),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 16,
@@ -76,11 +81,29 @@ class AppTheme {
           ),
         ),
       ),
+      // FilledButton must always have white text on the primary-coloured surface
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primaryColor.withValues(alpha: 0.38),
+          disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          // Force the primary colour so text is always readable on light surfaces
+          foregroundColor: primaryColor,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadiusGeometry.circular(8),
+            borderRadius: BorderRadius.circular(8),
           ),
           textStyle: GoogleFonts.poppins(
             fontSize: 14,
@@ -148,6 +171,8 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFFF1F5F9),
         deleteIconColor: const Color(0xFF64748B),
+        // No explicit color – let M3 compute foreground from the surface colour
+        // so selected/unselected states always satisfy contrast requirements.
         labelStyle: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.w500,
@@ -278,6 +303,10 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primaryColor.withValues(alpha: 0.38),
+          disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -288,9 +317,24 @@ class AppTheme {
           ),
         ),
       ),
-
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: primaryColor.withValues(alpha: 0.38),
+          disabledForegroundColor: Colors.white.withValues(alpha: 0.6),
+          textStyle: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
+          foregroundColor: primaryColor,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           textStyle: GoogleFonts.poppins(
@@ -359,10 +403,10 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFF1E293B),
         deleteIconColor: const Color(0xFF94A3B8),
+        // No hardcoded color – M3 computes correct foreground for each state
         labelStyle: GoogleFonts.poppins(
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: const Color(0xFFE2E8F0),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
